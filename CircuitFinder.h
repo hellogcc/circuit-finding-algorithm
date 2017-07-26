@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// Written by Xing Mingjie (mingjie.xing@gmail.com).
-//
-// An implementation of the Johnson's circuit finding algorithm [1].
-//
-// [1] Donald B. Johnson, Finding all the elementary circuits of a directed
-//     graph, SIAM Journal on Computing, 1975.
-//
-//===----------------------------------------------------------------------===//
-
 #ifndef CIRCUIT_FINDER_H
 #define CIRCUIT_FINDER_H
 
@@ -32,9 +21,9 @@ class CircuitFinder
   bool circuit(int V);
   void output();
 
-public:
-  CircuitFinder(int Array[N][N])
-    : AK(N), Blocked(N), B(N) {
+ public:
+ CircuitFinder(int Array[N][N])
+   : AK(N), Blocked(N), B(N) {
     for (int I = 0; I < N; ++I) {
       for (int J = 0; J < N; ++J) {
         if (Array[I][J]) {
@@ -73,9 +62,9 @@ bool CircuitFinder<N>::circuit(int V)
     if (W == S) {
       output();
       F = true;
-    } else if (W > S && !Blocked[W - 1]) {
-      F = circuit(W);
-    }
+    } else if (!Blocked[W - 1]) {
+      if(circuit(W))
+	F = true;    }
   }
 
   if (F) {
@@ -115,6 +104,11 @@ void CircuitFinder<N>::run()
       B[I - 1].clear();
     }
     circuit(S);
+
+    // remove this vertex from the graph
+    for (int I = S+1; I <= N; ++I)
+      AK[I-1].remove(S);
+    
     ++S;
   }
 }
