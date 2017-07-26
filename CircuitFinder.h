@@ -32,9 +32,9 @@ class CircuitFinder
   bool circuit(int V);
   void output();
 
-public:
-  CircuitFinder(int Array[N][N])
-    : AK(N), Blocked(N), B(N) {
+ public:
+ CircuitFinder(int Array[N][N])
+   : AK(N), Blocked(N), B(N) {
     for (int I = 0; I < N; ++I) {
       for (int J = 0; J < N; ++J) {
         if (Array[I][J]) {
@@ -73,9 +73,9 @@ bool CircuitFinder<N>::circuit(int V)
     if (W == S) {
       output();
       F = true;
-    } else if (W > S && !Blocked[W - 1]) {
-      F = circuit(W);
-    }
+    } else if (!Blocked[W - 1]) {
+      if(circuit(W))
+	F = true;    }
   }
 
   if (F) {
@@ -115,6 +115,11 @@ void CircuitFinder<N>::run()
       B[I - 1].clear();
     }
     circuit(S);
+
+    // remove this vertex from the graph
+    for (int I = S+1; I <= N; ++I)
+      AK[I-1].remove(S);
+    
     ++S;
   }
 }
